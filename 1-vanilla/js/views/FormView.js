@@ -8,11 +8,25 @@ FormView.setup = function (el) {
     this.init(el);
     this.inputEl = el.querySelector('[type=text]');
     this.resetEl = el.querySelector('[type=reset]');
-    this.showResetBtn();
+    this.showResetBtn(false);
+    this.bindEvents();
 }
 
 FormView.showResetBtn = function(show = true) {
     this.resetEl.style.display = show ? 'block' : 'none';
+}
+
+FormView.bindEvents = function() {
+    this.inputEl.addEventListener('keyup', e => this.onKeyup(e));
+    this.resetEl.addEventListener('click', e => this.onReset(e));
+}
+
+FormView.onKeyup = function () {
+    this.showResetBtn(this.inputEl.value.length);
+}
+
+FormView.onReset = function () {
+    this.showResetBtn(false);
 }
 
 export default FormView;
