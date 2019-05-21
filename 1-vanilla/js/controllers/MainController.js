@@ -6,7 +6,7 @@ export default {
     init() {
         FormView.setup(document.querySelector('form'))
             .on('@submit', e => this.onSubmit(e.detail.input))
-            .on('@reset', this.onResetForm())
+            .on('@reset', e => this.onResetForm())
         ;
     },
 
