@@ -19,21 +19,25 @@ FormView.showResetBtn = function(show = true) {
 
 FormView.bindEvents = function() {
     this.inputEl.addEventListener('keyup', e => this.onKeyup(e));
-    this.resetEl.addEventListener('click', e => this.onReset(e));
+    this.resetEl.addEventListener('click', e => this.onClickReset());
 }
 
 FormView.onKeyup = function (e) {
     this.showResetBtn(this.inputEl.value.length);
 
+    if(!this.inputEl.value.length) {
+        this.emit('@reset');
+    }
+
     // enter키가 입력되면 mainController에 알려줌.
     const enterKey = 13;
-    console.log('keyCode: ', e.keyCode);
     if (e.keyCode === enterKey) {
         this.emit('@submit', {input: this.inputEl.value});
     }
 }
 
-FormView.onReset = function () {
+FormView.onClickReset = function () {
+    this.emit('@reset');
     this.showResetBtn(false);
 }
 
