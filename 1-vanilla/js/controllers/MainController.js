@@ -1,6 +1,10 @@
 import FormView from '../views/FormView.js';
 import ResultView from '../views/ResultView.js';
+import TabView from '../views/TabView.js';
+import KeywordView from '../views/KeywordView.js';
+
 import SearchModel from '../models/SearchModel.js';
+import KeywordModel from '../models/KeywordModel.js';
 
 const tag = '[MainController]';
 
@@ -11,7 +15,15 @@ export default {
             .on('@reset', e => this.onResetForm())
         ;
 
+        TabView.setup(document.querySelector('#tabs'))
+            .on('@change', e => this.onChangeTab(e.detail.tabName))
+        ;
+
+        KeywordView.setup(document.querySelector('#search-keyword'));
         ResultView.setup(document.querySelector('#search-result'));
+
+        this.selectedTab = TabView.tabNames.recommend;
+        this.renderView();
     },
 
     onSubmit(input) {
@@ -34,4 +46,22 @@ export default {
     onSearchResult(data) {
         ResultView.render(data);
     },
+
+    renderView() {
+        console.log(tag, 'renderView()');
+        TabView.setActiveTab(this.selectedTab);
+
+        if(this.selectedTab === TabView.tabNames.recommend) {
+            KeywordModel.list().then(data => {
+                KeywordView.render(data);
+            });
+        }
+        else {
+
+        }
+    },
+
+    onChangeTab(tabName) {
+        debugger;
+    }
 }
