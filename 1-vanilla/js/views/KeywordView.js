@@ -36,7 +36,7 @@ KeywordView.getKeywordsHtml = function (data) {
 KeywordView.onClickKeyword = function (e) {
     const {keyword} = e.currentTarget.dataset;
 
-    console.log(tag, 'onClickKeyword()');
+    console.log(tag, 'onClickHistory()');
     this.emit('@click', {keyword});
 }
 

@@ -2,9 +2,11 @@ import FormView from '../views/FormView.js';
 import ResultView from '../views/ResultView.js';
 import TabView from '../views/TabView.js';
 import KeywordView from '../views/KeywordView.js';
+import HistoryView from '../views/HistoryView.js';
 
 import SearchModel from '../models/SearchModel.js';
 import KeywordModel from '../models/KeywordModel.js';
+import HistoryModel from '../models/HistoryModel.js';
 
 const tag = '[MainController]';
 
@@ -23,9 +25,13 @@ export default {
             .on('@click', e => this.onClickKeyword(e.detail.keyword))
         ;
 
+        HistoryView.setup(document.querySelector('#search-history'))
+            .on('@click', e => this.onClickHistory(e.detail.keyword))
+        ;
+
         ResultView.setup(document.querySelector('#search-result'));
 
-        this.selectedTab = TabView.tabNames.recommend;
+        this.selectedTab = TabView.tabNames.recent;
         this.renderView();
     },
 
@@ -40,7 +46,7 @@ export default {
     },
 
     search(query) {
-        console.log(tag, 'search()', query);
+        FormView.setValue(query);
         SearchModel.list(query).then(data => {
             this.onSearchResult(data);
         });
@@ -49,6 +55,7 @@ export default {
     onSearchResult(data) {
         TabView.hide();
         KeywordView.hide();
+        HistoryView.hide();
         ResultView.render(data);
     },
 
@@ -58,16 +65,19 @@ export default {
 
         if(this.selectedTab === TabView.tabNames.recommend) {
             this.fetchSearchKeyword();
+            HistoryView.hide();
         }
         else {
-            debugger;
+            this.fetchSearchHistory();
+            KeywordView.hide();
         }
 
         ResultView.hide();
     },
 
     onChangeTab(tabName) {
-        debugger;
+        this.selectedTab = tabName;
+        this.renderView();
     },
 
     fetchSearchKeyword() {
@@ -76,9 +86,17 @@ export default {
         });
     },
 
+    fetchSearchHistory() {
+        HistoryModel.list().then(data => {
+            HistoryView.render(data);
+        });
+    },
+
     onClickKeyword(keyword) {
-        console.log(tag, 'onClickKeyword()');
-        FormView.setValue(keyword);
         this.search(keyword);
-    }
+    },
+
+    onClickHistory(keyword) {
+        this.search(keyword);
+    },
 }
