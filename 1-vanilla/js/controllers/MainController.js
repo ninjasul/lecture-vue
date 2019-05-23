@@ -62,6 +62,8 @@ export default {
         else {
             debugger;
         }
+
+        ResultView.hide();
     },
 
     onChangeTab(tabName) {
