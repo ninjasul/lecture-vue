@@ -36,7 +36,7 @@ export default {
 
     onResetForm() {
         console.log(tag, 'onResetForm()');
-        ResultView.hide();
+        this.renderView();
     },
 
     search(query) {
@@ -60,7 +60,7 @@ export default {
             this.fetchSearchKeyword();
         }
         else {
-
+            debugger;
         }
     },
 
@@ -76,6 +76,7 @@ export default {
 
     onClickKeyword(keyword) {
         console.log(tag, 'onClickKeyword()');
+        FormView.setValue(keyword);
         this.search(keyword);
     }
 }
