@@ -11,7 +11,7 @@ TabView.tabNames = {
 
 TabView.setup = function (el) {
     this.init(el);
-    TabView.bindEvents();
+    this.bindEvents();
     return this;
 }
 

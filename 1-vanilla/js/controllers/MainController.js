@@ -19,7 +19,10 @@ export default {
             .on('@change', e => this.onChangeTab(e.detail.tabName))
         ;
 
-        KeywordView.setup(document.querySelector('#search-keyword'));
+        KeywordView.setup(document.querySelector('#search-keyword'))
+            .on('@click', e => this.onClickKeyword(e.detail.keyword))
+        ;
+
         ResultView.setup(document.querySelector('#search-result'));
 
         this.selectedTab = TabView.tabNames.recommend;
@@ -44,6 +47,8 @@ export default {
     },
 
     onSearchResult(data) {
+        TabView.hide();
+        KeywordView.hide();
         ResultView.render(data);
     },
 
@@ -52,9 +57,7 @@ export default {
         TabView.setActiveTab(this.selectedTab);
 
         if(this.selectedTab === TabView.tabNames.recommend) {
-            KeywordModel.list().then(data => {
-                KeywordView.render(data);
-            });
+            this.fetchSearchKeyword();
         }
         else {
 
@@ -63,5 +66,16 @@ export default {
 
     onChangeTab(tabName) {
         debugger;
+    },
+
+    fetchSearchKeyword() {
+        KeywordModel.list().then(data => {
+            KeywordView.render(data);
+        });
+    },
+
+    onClickKeyword(keyword) {
+        console.log(tag, 'onClickKeyword()');
+        this.search(keyword);
     }
 }
