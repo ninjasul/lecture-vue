@@ -1,4 +1,6 @@
 import SearchModel from "./models/SearchModel.js";
+import KeywordModel from "./models/KeywordModel.js";
+import HistoryModel from "./models/HistoryModel.js";
 
 new Vue({
     el: '#app',
@@ -7,10 +9,14 @@ new Vue({
         submitted: false,
         tabs: ['추천 검색어', '최근 검색어'],
         selectedTab: '',
-        searchResult: []
+        searchResult: [],
+        keywords : [],
+        histories : [],
     },
     created() {
         this.selectedTab = this.tabs[0];
+        this.fetchKeywords();
+        this.fetchSearchHistories();
     },
     methods: {
         onSubmit(e) {
@@ -28,6 +34,9 @@ new Vue({
                 this.searchResult = data;
                 this.submitted = true;
             });
+
+            HistoryModel.add(this.query);
+            this.fetchSearchHistories();
         },
 
         onReset(e) {
@@ -38,6 +47,28 @@ new Vue({
 
         onClickTab(tab) {
             this.selectedTab = tab;
+        },
+
+        onClickKeyword(keyword) {
+            this.query = keyword;
+            this.search();
+        },
+
+        onClickRemoveHistory(keyword) {
+            HistoryModel.remove(keyword);
+            this.fetchSearchHistories();
+        },
+
+        fetchKeywords() {
+            KeywordModel.list(this.query).then(data => {
+                this.keywords = data;
+            });
+        },
+
+        fetchSearchHistories() {
+            HistoryModel.list(this.query).then(data => {
+                this.histories = data;
+            });
         },
     }
 })
